@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "129865023140",
+    "project_id": "cadenze-4514b",
+    "storage_bucket": "cadenze-4514b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:129865023140:android:95616f7532ae21e9453031",
+        "android_client_info": {
+          "package_name": "tech.cadenza.yashdhanlobhe.cadenza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "129865023140-d8q8nrcfa18i3pp9il1d4km74pqrb6oh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBkjwztGE3kqvBGEmBjCuJNDrCKczVIQx4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "129865023140-d8q8nrcfa18i3pp9il1d4km74pqrb6oh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
