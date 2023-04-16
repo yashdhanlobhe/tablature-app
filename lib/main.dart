@@ -1,5 +1,6 @@
 import 'package:cadenza/views/screens/on_board/select_music_from_strorage_screen.dart';
 import 'package:cadenza/views/screens/on_board/select_track_screen.dart';
+import 'package:cadenza/views/screens/on_board/show_genere.dart';
 import 'package:cadenza/views/screens/on_board/tabs_generation_screen.dart';
 import 'package:cadenza/views/screens/on_board/splash_screen.dart';
 import 'package:flutter/material.dart';
@@ -23,10 +24,11 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.blue,
       ),
       routes: {
-        '/splashScreen' : (ctx) => SplashScreen(),
-        '/selectSound/selectTrack' : (ctx) => SelectTrack(),
-        '/selectSound' : (ctx) => SelectSound(),
-        '/selectSound/selectTrack/showTabResult' : (ctx) => ShowResult()
+        '/splashScreen' : (ctx) => const SplashScreen(),
+        '/selectSound/selectTrack' : (ctx) => const SelectTrack(),
+        '/selectSound' : (ctx) => const SelectSound(),
+        '/selectSound/selectTrack/showTabResult' : (ctx) => const ShowResult(),
+        '/selectSound/songGenre' : (ctx) => const ShowGenre()
       },
       initialRoute: '/splashScreen',
     );

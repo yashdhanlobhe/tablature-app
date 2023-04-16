@@ -30,8 +30,8 @@ class _AddCropScreenFarmerState extends State<SelectTrack> {
     Map<String, dynamic> prevData =
     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     PlatformFile file = prevData["file"];
-    if(cnt == 1){
-      cnt = 0;
+    if(prevData["cnt"] == 1){
+      prevData["cnt"] = 0;
       uploadDocsToFirestore(file);
     }
 
@@ -60,7 +60,7 @@ class _AddCropScreenFarmerState extends State<SelectTrack> {
                   Container(
                     child: TextHelper.textWithColorSize(val, 18, ConstantColors.mPrimaryColor,fontWeight: FontWeight.w500),
                   ),
-                  TextInputController.simpleTextInputController(context , "Enter Track Name" ,  nameCtrl),
+                  TextInputController.simpleTextInputController(context , "Enter Track Number" ,  nameCtrl),
                   Container(
                       width: MediaQuery.of(context).size.width,
                       margin: const EdgeInsets.only(top: 20, bottom: 30),
@@ -80,7 +80,8 @@ class _AddCropScreenFarmerState extends State<SelectTrack> {
                             '/selectSound/selectTrack/showTabResult',
                             arguments: {
                               "track" : nameCtrl.text,
-                              "url" : downloadURL
+                              "url" : downloadURL,
+                              "cnt" : 1
                             }
                         );
                       },
@@ -98,7 +99,7 @@ class _AddCropScreenFarmerState extends State<SelectTrack> {
 
   Future<void> uploadDocsToFirestore(PlatformFile file) async {
     try {
-      EasyLoading.show(status: "Uploading Image");
+      EasyLoading.show(status: "Uploading Song");
 
       FirebaseStorage storage = FirebaseStorage.instance;
       Reference referenceProfile = storage.ref().child("file.mid");
@@ -156,6 +157,7 @@ class _AddCropScreenFarmerState extends State<SelectTrack> {
           }
           setState(() {
             Map<String, dynamic> myMap = json.decode(response.body.toString());
+            val = "";
             myMap.forEach((key, value) {
                   val += ""+key.toString()+" = "+ value.toString() +"\n";
             });

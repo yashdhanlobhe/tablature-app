@@ -24,14 +24,14 @@ class _AddCropScreenFarmerState extends State<ShowResult> {
     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
     String track = prevData["track"];
     String url = prevData["url"];
-    if(cnt == 1){
-      cnt = 0;
+    if(prevData["cnt"] == 1){
+      prevData["cnt"] = 0;
       getTabs(url, track);
     }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-          title: const Text("Tabulator"),
+          title: const Text("Tablature"),
           backgroundColor: ConstantColors.mPrimaryColor,
           elevation: 0,
           shadowColor: Colors.transparent

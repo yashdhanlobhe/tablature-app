@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import '../constants/colors/constant_colors.dart';
 
 class ButtonHelper{
-  static Widget getElevatedButton(String text , var fun){
+  static Widget getElevatedButton(String text , var fun ,
+      {Color color = Colors.black45}){
+    if(color == Colors.black45) color = ConstantColors.mPrimaryColor;
     return ElevatedButton(
       onPressed: fun,
       child: TextHelper.textWithColorSize(text,
@@ -15,7 +17,7 @@ class ButtonHelper{
               RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))),
           backgroundColor: MaterialStateColor.resolveWith(
-                  (states) => ConstantColors.mPrimaryColor)),
+                  (states) => color)),
     );
   }
 

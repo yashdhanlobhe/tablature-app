@@ -28,7 +28,7 @@ class _AddCropScreenFarmerState extends State<SelectSound> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Center(child: Text("Cadenze"),),
+        title: const Center(child: Text("Cadenza"),),
         backgroundColor: ConstantColors.mPrimaryColor,
         elevation: 0,
         shadowColor: Colors.transparent
@@ -37,67 +37,109 @@ class _AddCropScreenFarmerState extends State<SelectSound> {
         child: Container(
           alignment: Alignment.centerLeft,
           constraints: const BoxConstraints(maxWidth: 500),
-          margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+
+          child: Stack(
             children: [
               Container(
-                child: TextHelper.textWithColorSize(songName, 20, ConstantColors.mPrimaryColor),
-                padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(5)),
-                  border: Border.all(color: Colors.black, width: 1.0),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage('lib/constants/bb.jpg'),
+                        fit: BoxFit.fitHeight
+                    ),
+                  ),
                 ),
               ),
               Container(
-                width: MediaQuery.of(context).size.width,
-                margin: const EdgeInsets.only(top: 20, bottom: 30),
-                height: 48,
-                child: ButtonHelper.getElevatedButton(
-                  "Select Song", () async {
-                    var file = await FilePicker.platform.pickFiles(allowMultiple: true);
-                    if (file == null) return;
-                    result = file.files.first;
-                    setState(() {
-                      songName = result.name;
-                    });
-                  },
-                )
+                color: Colors.white70
               ),
-
               Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(top: 20, bottom: 30),
-                  height: 48,
-                  child: ButtonHelper.getElevatedButton(
-                    "Get Tablature", () async {
-                      if(result == null){
-                        EasyLoading.showError("Bhai song select to kar...");
-                        return;
-                      }
-                      Navigator.pushNamed(
-                          context,
-                          '/selectSound/selectTrack',
-                          arguments: {
-                            "file" : result
+                margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      child: TextHelper.textWithColorSize(songName, 20, ConstantColors.mPrimaryColor),
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(5)),
+                        border: Border.all(color: Colors.black, width: 1.0),
+                      ),
+                    ),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(top: 20, bottom: 30),
+                        height: 48,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            var file = await FilePicker.platform.pickFiles(allowMultiple: true);
+                            if (file == null) return;
+                            result = file.files.first;
+                            setState(() {
+                              songName = result.name;
+                            });
+                          },
+                          child: TextHelper.textWithColorSize("Select Song ♫",
+                              18, Colors.white , fontWeight: FontWeight.w700),
+                          style: ButtonStyle(
+                              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8))),
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                      (states) => Colors.green)),
+                        )
+                    ),
+
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(top: 20, bottom: 30),
+                        height: 48,
+                        child: ButtonHelper.getElevatedButton(
+                          "Get Tablature", () async {
+                          if(result == null){
+                            EasyLoading.showError("Bhai song select to kar...");
+                            return;
                           }
-                      );
-                    },
-                  )
-              ),
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: const EdgeInsets.only(top: 20, bottom: 30),
-                  height: 48,
-                  child: ButtonHelper.getElevatedButton(
-                    "Get Genre", () async {
+                          Navigator.pushNamed(
+                              context,
+                              '/selectSound/selectTrack',
+                              arguments: {
+                                "file" : result,
+                                "cnt" : 1
+                              }
+                          );
+                        },
+                        )
+                    ),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(top: 20, bottom: 30),
+                        height: 48,
+                        child: ButtonHelper.getElevatedButton(
+                          "Get Genre", () async {
+                          if(result == null){
+                            EasyLoading.showError("Bhai song select to kar...");
+                            return;
+                          }
+                          Navigator.pushNamed(
+                              context,
+                              '/selectSound/songGenre',
+                              arguments: {
+                                "file" : result,
+                                "song":""
 
-                     },
-                  )
-              ),
+                              }
+                          );
+                        },
+                        )
+                    ),
+                  ],
+                ),
+              )
             ],
-          ),
+          )
+
         ),
       ),
     );
