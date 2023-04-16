@@ -1,3 +1,4 @@
+import 'package:cadenza/views/screens/on_board/about_screen.dart';
 import 'package:cadenza/views/screens/on_board/select_music_from_strorage_screen.dart';
 import 'package:cadenza/views/screens/on_board/select_track_screen.dart';
 import 'package:cadenza/views/screens/on_board/show_genere.dart';
@@ -28,7 +29,8 @@ class MyApp extends StatelessWidget {
         '/selectSound/selectTrack' : (ctx) => const SelectTrack(),
         '/selectSound' : (ctx) => const SelectSound(),
         '/selectSound/selectTrack/showTabResult' : (ctx) => const ShowResult(),
-        '/selectSound/songGenre' : (ctx) => const ShowGenre()
+        '/selectSound/songGenre' : (ctx) => const ShowGenre(),
+        '/selectSound/about' : (ctx) => const AboutScreen()
       },
       initialRoute: '/splashScreen',
     );

@@ -127,12 +127,27 @@ class _AddCropScreenFarmerState extends State<SelectSound> {
                               '/selectSound/songGenre',
                               arguments: {
                                 "file" : result,
-                                "song":""
+                                "cnt" : 1
 
                               }
                           );
                         },
                         )
+                    ),
+                    Container(
+                        width: MediaQuery.of(context).size.width,
+                        margin: const EdgeInsets.only(top: 60, bottom: 30),
+                        height: 48,
+                        child: ButtonHelper.getElevatedButton(
+                          "About App", () async {
+                          Navigator.pushNamed(
+                              context,
+                              '/selectSound/about',
+                          );
+                        },
+                          color: Colors.black38,
+                        ),
+
                     ),
                   ],
                 ),

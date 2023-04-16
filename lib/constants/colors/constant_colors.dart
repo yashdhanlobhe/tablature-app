@@ -8,7 +8,7 @@ class ConstantColors{
   static Color textInputCtrl = const Color(0xFFF3F3F3);
   static Color textInputCtrl2 = const Color(0xFFE0E0E0);
   static Color whiteBackground = const Color(0xFFFAF8F1);
-  static Color greyColor2 = const Color(0x33707070);
+  static Color greyColor2 = const Color(0xFF4169e1);
   static Color scaffoldBackground = const Color(0xFF5A5A5A);
 
 }

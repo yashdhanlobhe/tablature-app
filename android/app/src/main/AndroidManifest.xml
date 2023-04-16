@@ -2,7 +2,7 @@
     package="tech.cadenza.yashdhanlobhe.cadenza">
    <application
         android:label="cadenza"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

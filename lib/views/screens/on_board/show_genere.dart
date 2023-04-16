@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
-import 'package:cadenza/constants/colors/constant_colors.dart';
-import 'package:cadenza/helper/text_helper.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../constants/colors/constant_colors.dart';
 import '../../../helper/button_helper.dart';
+import '../../../helper/text_helper.dart';
 import '../../../helper/text_input_controller.dart';
 
-String songGenre = "";
+TextEditingController nameCtrl = TextEditingController();
+String downloadURL = "";
+String val = "";
 int cnt = 1;
 
 class ShowGenre extends StatefulWidget {
@@ -26,101 +26,128 @@ class ShowGenre extends StatefulWidget {
 }
 
 class _AddCropScreenFarmerState extends State<ShowGenre> {
-
-
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> prevData =
     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-
-      if(prevData["song"] as String == ""){
-          help();
-      }
-
-
-
+    PlatformFile file = prevData["file"];
+    if(prevData["cnt"] == 1){
+      prevData["cnt"] = 0;
+      uploadDocsToFirestore(file);
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Genre"),
-        backgroundColor: ConstantColors.mPrimaryColor,
-        elevation: 0,
-        shadowColor: Colors.transparent
+          title: const Text("Song Genre"),
+          backgroundColor: ConstantColors.mPrimaryColor,
+          elevation: 0,
+          shadowColor: Colors.transparent
       ),
       body: Center(
         child: Container(
           alignment: Alignment.centerLeft,
           constraints: const BoxConstraints(maxWidth: 500),
           margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
-          child: Center(
-            child: TextHelper.textWithColorSize(
-                songGenre,
-                40,
-                ConstantColors.mPrimaryColor ,
-                fontWeight: FontWeight.w600
-            ),
-          )
+          child: ListView(
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: TextHelper.textWithColorSize(val, 30, Colors.green,fontWeight: FontWeight.w800),
+                  ),
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
-  setGenre() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('Blues.wav' , 'Blues');
-    await prefs.setString('Classical.wav' , 'Classical');
-    await prefs.setString('Country.wav' , 'Country');
-    await prefs.setString('Disco.wav' , 'Disco');
-    await prefs.setString('Hiphop.wav' , 'Hiphop');
-    await prefs.setString('Jazz.wav' , 'Jazz');
-    await prefs.setString('Metal.wav' , 'Metal');
-    await prefs.setString('Pop.wav' , 'Pop');
-    await prefs.setString('Reggae.wav' , 'Reggae');
-    await prefs.setString('Rock.wav' , 'Rock');
-  }
 
-  Future<String> getGenreOnSong(PlatformFile file) async {
-      List<String> ls = [
-        'Blues',
-        'Classical',
-        'Country',
-        'Disco',
-        'Hiphop',
-        'Jazz',
-        'Metal',
-        'Pop',
-        'Reggae',
-        'Roc'
-      ];
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? s = prefs.get(file.name) as String?;
 
-      if(s == null){
-          Random random = new Random();
-          int rand = random.nextInt(100);
+  Future<void> uploadDocsToFirestore(PlatformFile file) async {
+    try {
+      EasyLoading.show(status: "Uploading Song");
 
-          String s = ls[rand%ls.length];
 
-          prefs.setString(file.name, s);
-          setState(() {
-              songGenre = s;
-          });
-      }else{
-          setState(() {
-            songGenre = s;
-          });
+      final storageRef = FirebaseStorage.instance.ref();
+
+      final songRef = storageRef.child("song.wav");
+
+      String s = '';
+      if(file != null) s = file.path!;
+      File f = File(s);
+
+      UploadTask uploadTask = songRef.putFile(f);
+
+      downloadURL = await (await uploadTask.whenComplete(() => null))
+          .ref
+          .getDownloadURL();
+
+      EasyLoading.dismiss();
+
+      if(downloadURL == "") {
+        cnt = 1;
+        EasyLoading.dismiss();
+        EasyLoading.showError("Image upload not working :(");
+        return;
       }
+      EasyLoading.dismiss();
+      getTracks(downloadURL);
+      return;
+    } catch (e) {
+      cnt = 1;
+      EasyLoading.dismiss();
+      EasyLoading.showError("Image upload not working :(");
+      return ;
+    }
 
-      return songGenre;
   }
 
-  Future<void> help() async {
-    Map<String, dynamic> prevData =
-    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>;
-    PlatformFile file = prevData["file"];
-    songGenre = prevData["song"];
-    setGenre();
-    String s = await getGenreOnSong(file);
-    prevData["song"] = s;
+  Future<void> getTracks(String URL) async {
+    var client = http.Client();
+    EasyLoading.show(status: "Getting Genre");
+    try {
+      var url = Uri.https('tablature.onrender.com', 'getGenre');
+      var response = await http.post(
+          url,
+          headers: {
+            "Content-type": "application/json",
+            "Accept": "application/json",
+          },
+          body: jsonEncode({
+            "filename": 'file.wav',
+            "url": URL
+          })
+      );
+      if(response.statusCode != 200){
+        cnt = 1;
+        EasyLoading.dismiss();
+        EasyLoading.showError("ML model not working properly :-(");
+        return;
+      }
+      setState(() {
+
+        Map<String, dynamic> myMap = json.decode(response.body.toString());
+        print(myMap.toString());
+        val = myMap["result"].toString();
+
+      });
+    } catch (e){
+      EasyLoading.dismiss();
+      EasyLoading.showError("ML model not working :(");
+      return;
+    }
+    finally {
+      client.close();
+    }
+    EasyLoading.dismiss();
+    return;
   }
 }
