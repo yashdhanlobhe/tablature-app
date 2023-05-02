@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../constants/colors/constant_colors.dart';
 import '../../../helper/text_helper.dart';
+
+String uri = "https://www.freeprivacypolicy.com/live/7268cf25-e8ad-4e0f-a61b-7c6e8acc70cf";
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({Key? key}) : super(key: key);
@@ -105,6 +108,16 @@ class _AddCropScreenFarmerState extends State<AboutScreen> {
                     alignment: Alignment.center,
                     child: TextHelper.textWithColorSize("Yash Dhanlobhe", 20, Colors.black,fontWeight: FontWeight.w600),
                   ),
+
+
+                  Container(
+                    margin: const EdgeInsets.symmetric(vertical: 60),
+                    alignment: Alignment.center,
+                    child: InkWell(
+                        onTap: _launchURL,
+                        child: TextHelper.textWithColorSize("Privacy Policy", 18, Colors.blueAccent,fontWeight: FontWeight.w600)
+                    ),
+                  )
                 ],
               ),
             ),
@@ -112,5 +125,13 @@ class _AddCropScreenFarmerState extends State<AboutScreen> {
         )
       ),
     );
+  }
+  _launchURL() async {
+    Uri _url = Uri.parse(uri);
+    if (await launchUrl(_url)) {
+      await launchUrl(_url);
+    } else {
+      throw 'Could not launch $_url';
+    }
   }
 }
